@@ -1,0 +1,11 @@
+*azure-log-analytics.txt*  Utility to search in Azure Application Insights
+Log Analytics
+
+Author:  Christian Rondeau <http://christianrondeau.net/>
+License: MIT
+
+==============================================================================
+
+INTRODUCTION                                                 **azure-log-analytics*
+
+TODO
