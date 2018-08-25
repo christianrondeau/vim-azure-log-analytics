@@ -50,12 +50,13 @@ function! azureloganalytics#query(kql) abort
 	" Wait message
 	call setline(1, "\"Searching...\"")
 	redraw!
-	ggDG
+	normal! ggDG
 
 	" Search
+	let l:jq = "if(.error) then . else .tables[0].rows end"
 	let l:cmd = "silent! read! curl" .
 		\ " -sS -G -H 'x-api-key: " . g:azureloganalytics_apikey .
-		\ "' " . shellescape("https://api.applicationinsights.io/v1/apps/" . g:azureloganalytics_appid . "/query?query=" . azureloganalytics#queryencode(a:kql), 1)
+		\ "' " . shellescape("https://api.applicationinsights.io/v1/apps/" . g:azureloganalytics_appid . "/query?query=" . azureloganalytics#queryencode(a:kql), 1) . " | jq '" . l:jq . "'"
 	"echom l:cmd
 	execute l:cmd
 
