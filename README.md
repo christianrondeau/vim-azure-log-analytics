@@ -21,6 +21,8 @@ And install it:
 You also need to assign these variables in your `.vimrc`:
 
 > TODO
+let g:azureloganalytics_appid = ""
+let g:azureloganalytics_apikey = ""
 
 ## Windows
 
