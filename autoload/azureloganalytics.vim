@@ -53,7 +53,20 @@ function! azureloganalytics#query(kql) abort
 	normal! ggDG
 
 	" Search
-	let l:jq = "if(.error) then . else .tables[0].rows end"
+	" https://stackoverflow.com/a/44752164/154480
+	let l:jq = "
+				\ if(.error) then
+				\   .
+				\ else
+				\   def objectify(headers):
+				\     [headers, .] | transpose | map( { (.[0]): .[1] } ) | add;
+				\   .tables[0]
+				\     | (.columns | map(.name)) as $headers
+				\     | .rows
+				\     | map( objectify($headers) )
+				\ end
+				\"
+	"let l:jq = " then . else .tables[0].rows end"
 	let l:cmd = "silent! read! curl" .
 		\ " -sS -G -H 'x-api-key: " . g:azureloganalytics_apikey .
 		\ "' " . shellescape("https://api.applicationinsights.io/v1/apps/" . g:azureloganalytics_appid . "/query?query=" . azureloganalytics#queryencode(a:kql), 1) . " | jq '" . l:jq . "'"
@@ -62,4 +75,5 @@ function! azureloganalytics#query(kql) abort
 
 	" Prepare results
 	setlocal filetype=json
+	normal! gg
 endfunction
