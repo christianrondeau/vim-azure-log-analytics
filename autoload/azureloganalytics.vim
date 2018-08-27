@@ -79,7 +79,7 @@ function! azureloganalytics#query(kql) abort
 		\ " -sS -G -H 'x-api-key: " . g:azureloganalytics_apikey .
 		\ "' " . shellescape("https://api.applicationinsights.io/v1/apps/" .
 		\ g:azureloganalytics_appid .
-		\ "/query?query=" . azureloganalytics#queryencode(a:kql), 1) .
+		\ "/query?query=" . azureloganalytics#urlencode(a:kql), 1) .
 		\ " | jq '" . l:jq . "'"
 	execute l:cmd
 
