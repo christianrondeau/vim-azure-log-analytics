@@ -31,12 +31,21 @@ endfunction
 " }}}
 
 " query encode {{{
-function! azureloganalytics#queryencode(query)
-	let l:query = a:query
-	let l:query = substitute(l:query, " ", "%20", "g")
-	let l:query = substitute(l:query, "|", "%7C", "g")
-	let l:query = substitute(l:query, "&", "%26", "g")
-	return l:query
+" Credits: https://github.com/roxma/vim-encode/blob/master/autoload/encode.vim
+function! azureloganalytics#urlencode(text)
+	let l:i = 0
+	let l:list = []
+	while l:i<len(a:text)
+		let l:c = a:text[l:i]
+		if ('A' <= l:c && l:c <= 'Z') || ('a' <= l:c && l:c <= 'z') || ('0' <= l:c && l:c <= '9') || (l:c=='.')
+			let l:i += 1
+			call add(l:list,l:c)
+		else
+			let l:list += ['%'. ('0123456789ABCDEF'[char2nr(l:c)/16]) . ('0123456789ABCDEF'[char2nr(l:c)%16])]
+			let l:i +=1
+		endif
+	endwhile
+	return join(l:list,'')
 endfunction
 " }}}
 
@@ -66,11 +75,12 @@ function! azureloganalytics#query(kql) abort
 				\     | map( objectify($headers) )
 				\ end
 				\"
-	"let l:jq = " then . else .tables[0].rows end"
 	let l:cmd = "silent! read! curl" .
 		\ " -sS -G -H 'x-api-key: " . g:azureloganalytics_apikey .
-		\ "' " . shellescape("https://api.applicationinsights.io/v1/apps/" . g:azureloganalytics_appid . "/query?query=" . azureloganalytics#queryencode(a:kql), 1) . " | jq '" . l:jq . "'"
-	"echom l:cmd
+		\ "' " . shellescape("https://api.applicationinsights.io/v1/apps/" .
+		\ g:azureloganalytics_appid .
+		\ "/query?query=" . azureloganalytics#queryencode(a:kql), 1) .
+		\ " | jq '" . l:jq . "'"
 	execute l:cmd
 
 	" Prepare results

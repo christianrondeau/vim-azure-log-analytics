@@ -4,6 +4,12 @@ Run [Azure Application Insights (Log Analytics)](https://docs.loganalytics.io/in
 
 # Installation
 
+## Requirements
+
+* [jq](https://stedolan.github.io/jq/)
+* [cURL](https://curl.haxx.se/)
+  * On Windows, you may need to download https://curl.haxx.se/ca/cacert.pem as `curl-ca-bundle.crt` and put it somewhere available in your `PATH`
+
 ## Plugin
 
 Use your preferred Vim plugin installation method. If you like [vim-plug](https://github.com/junegunn/vim-plug):
@@ -20,18 +26,14 @@ And install it:
 
 You also need to assign these variables in your `.vimrc`:
 
-> TODO
-let g:azureloganalytics_appid = ""
-let g:azureloganalytics_apikey = ""
-
-## Windows
-
-* Install [cURL](https://curl.haxx.se/) and make sur it's in your `PATH`
-* Download https://curl.haxx.se/ca/cacert.pem as `curl-ca-bundle.crt`, and put it somewhere available in your `PATH`
+    let g:azureloganalytics_appid = ""
+    let g:azureloganalytics_apikey = ""
 
 # Usage
 
-> TODO
+* Open a buffer with a `kql` file type (e.g. `:enew query.kql`)
+* Type a [Azure Log Analytics](https://docs.loganalytics.io/docs/Language-Reference) query
+* Press enter
 
 # LICENSE
 
