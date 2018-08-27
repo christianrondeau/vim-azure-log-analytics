@@ -5,3 +5,7 @@ let b:did_indent = 1
 
 setlocal nolisp
 setlocal noautoindent
+setlocal nocindent
+setlocal nosmartindent
+setlocal indentexpr=
+
