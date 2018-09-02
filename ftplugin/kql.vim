@@ -2,6 +2,8 @@ if exists("b:kql_loaded")
   finish
 endif
 
-nmap <silent> <buffer> <cr> :call azureloganalytics#query(join(getline(1, '$'), "\n"))<cr>
+nnoremap <silent> <buffer> <cr> :call azureloganalytics#query(join(getline(1, '$'), "\n"))<cr>
+
+imap <silent> <buffer> <cr> <cr><bar><space>
 
 let b:kql_loaded = 1
