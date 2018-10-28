@@ -10,10 +10,10 @@ syntax case ignore
 
 " Basic operators
 syntax match kqlOperator "[-!|&+<>=/*]"
-syntax match kqlOperator "\vand"
-syntax match kqlOperator "\vor"
-syntax match kqlOperator "\vin"
-syntax match kqlOperator "\v!in"
+syntax keyword kqlOperator and
+syntax keyword kqlOperator or
+syntax keyword kqlOperator in
+syntax keyword kqlOperator !in
 " Numbers
 syntax match kqlNumber "\v[0-9]+"
 " Tabular operators
@@ -23,7 +23,7 @@ syntax keyword kqlKeyword autocluster bag_unpack basket dcount_intersect diffpat
 " Tabular operators join
 syntax keyword kqlKeyword on kind innerunique inner leftouter rigtouter fullouter leftanti rightanti leftantisemi rightantisemi leftsemi rightsemi
 " Tabular operators summarize
-syntax keyword kqlKeyword on by bin
+syntax keyword kqlKeyword by bin
 " Special functions
 syntax keyword kqlKeyword table app workspace toscalar
 " Scalar functions

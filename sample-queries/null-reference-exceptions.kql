@@ -1,0 +1,10 @@
+let since = ago(1d);
+exceptions
+| where timestamp > since
+| where innermostType == 'System.NullReferenceException'
+| join (
+	requests
+	| where timestamp > since
+) on operation_Id
+| project timestamp, url, cloud_RoleName
+| summarize count() by cloud_RoleName, bin(timestamp, 1h)
