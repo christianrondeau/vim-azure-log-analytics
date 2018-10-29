@@ -49,12 +49,39 @@ function! azureloganalytics#urlencode(text)
 endfunction
 " }}}
 
+" formatting {{{
+
+function! azureloganalytics#getfilter() abort
+	if(!exists("g:azureloganalytics_format"))
+		return { 'pipe': '', 'fileformat': 'json' }
+	endif
+
+	if(g:azureloganalytics_format == 'csv')
+		return {
+					\  'pipe': "jq -r '(.[0] | keys_unsorted) as $keys | $keys, map([.[ $keys[] ]])[] | @csv'",
+					\  'fileformat': 'csv'
+					\}
+	elseif(g:azureloganalytics_format == 'text')
+		return {
+					\  'pipe': "jq -r 'map(. | to_entries | map(\"\(.key): \(.value|tostring)\")) | .[][]'",
+					\  'fileformat': 'csv'
+					\}
+	else
+		return { 'pipe': '', 'fileformat': 'json' }
+	endif
+endfunction
+
+" }}}
+
 function! azureloganalytics#query(kql) abort
 	" Ensure settings were configured
 	call azureloganalytics#sanitycheck()
 
 	" Open results buffer
 	call azureloganalytics#gotobuf()
+
+	" Get the formatter
+	let l:format = azureloganalytics#getfilter()
 
 	" Wait message
 	call setline(1, "\"Searching...\"")
@@ -75,15 +102,18 @@ function! azureloganalytics#query(kql) abort
 				\     | map( objectify($headers) )
 				\ end
 				\"
+
 	let l:cmd = "silent! read! curl" .
 		\ " -sS -G -H 'x-api-key: " . g:azureloganalytics_apikey .
 		\ "' " . shellescape("https://api.applicationinsights.io/v1/apps/" .
 		\ g:azureloganalytics_appid .
 		\ "/query?query=" . azureloganalytics#urlencode(a:kql), 1) .
 		\ " | jq '" . l:jq . "'"
+	let l:cmd .= l:format.pipe
+
 	execute l:cmd
 
-	" Prepare results
-	setlocal filetype=json
+	" Format results
+	execute! "setlocal filetype=" . l:format.fileformat
 	normal! gg
 endfunction

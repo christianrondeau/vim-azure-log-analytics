@@ -29,6 +29,16 @@ You also need to assign these variables in your `.vimrc`:
     let g:azureloganalytics_appid = ""
     let g:azureloganalytics_apikey = ""
 
+You can select between different formattings too:
+
+    let g:azureloganalytics_format = "text"
+
+Supported formattings are:
+
+    * `json` (default): Array of objects
+    * `csv`: Comma-separated values
+    * `text`: Human readable output
+
 # Usage
 
 * Open a buffer with a `kql` file type (e.g. `:enew query.kql`)
