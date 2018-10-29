@@ -58,12 +58,12 @@ function! azureloganalytics#getfilter() abort
 
 	if(g:azureloganalytics_format == 'csv')
 		return {
-					\  'pipe': "jq -r '(.[0] | keys_unsorted) as $keys | $keys, map([.[ $keys[] ]])[] | @csv'",
+					\  'pipe': "| jq -r '(.[0] | keys_unsorted) as $keys | $keys, map([.[ $keys[] ]])[] | @csv'",
 					\  'fileformat': 'csv'
 					\}
 	elseif(g:azureloganalytics_format == 'text')
 		return {
-					\  'pipe': "jq -r 'map(. | to_entries | map(\"\(.key): \(.value|tostring)\")) | .[][]'",
+					\  'pipe': "| jq -r 'map(. | to_entries | map(\"\\(.key): \\(.value|tostring)\")) | .[][]'",
 					\  'fileformat': 'csv'
 					\}
 	else
@@ -114,6 +114,6 @@ function! azureloganalytics#query(kql) abort
 	execute l:cmd
 
 	" Format results
-	execute! "setlocal filetype=" . l:format.fileformat
+	execute "setlocal filetype=" . l:format.fileformat
 	normal! gg
 endfunction
