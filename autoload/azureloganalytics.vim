@@ -53,7 +53,10 @@ endfunction
 
 function! azureloganalytics#getfilter() abort
 	if(!exists("g:azureloganalytics_format"))
-		return { 'pipe': '', 'fileformat': 'json' }
+		return {
+					\  'pipe': '',
+					\  'fileformat': 'json'
+					\}
 	endif
 
 	if(g:azureloganalytics_format == 'csv')
@@ -63,11 +66,14 @@ function! azureloganalytics#getfilter() abort
 					\}
 	elseif(g:azureloganalytics_format == 'text')
 		return {
-					\  'pipe': "| jq -r 'map(. | to_entries | map(\"\\(.key): \\(.value|tostring)\")) | .[][]'",
+					\  'pipe': "| jq -r 'map(. | to_entries | map(\"\\(.key): \\(.value|tostring)\"), [\"\"]) | .[][]'",
 					\  'fileformat': 'csv'
 					\}
 	else
-		return { 'pipe': '', 'fileformat': 'json' }
+		return {
+					\  'pipe': '',
+					\  'fileformat': 'json'
+					\}
 	endif
 endfunction
 
